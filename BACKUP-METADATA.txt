@@ -1,0 +1,4 @@
+source=https://hig.tinythor.cc/
+fetched_utc=2026-09-19T18:52:44Z
+sha256=b0357b622e3b4b1331fdd1d763c882396742a9d8f23338ef0633d6605ba5e4c1
+bytes=673717
