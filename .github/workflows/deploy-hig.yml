@@ -53,17 +53,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          response_file="$(mktemp)"
+          trap 'rm -f "$response_file"' EXIT
+
           for attempt in $(seq 1 12); do
             if curl --fail --location --silent --show-error \
               --max-time 20 \
               --user-agent 'HIG-GitHub-Deploy/1.0' \
               'https://hig.tinythor.cc/' \
-              | grep -q "Hunter's Intuitive Guidance"; then
-              echo 'Live HIG page is responding correctly.'
-              exit 0
+              --output "$response_file"; then
+              if grep -q "Hunter's Intuitive Guidance" "$response_file"; then
+                echo 'Live HIG page is responding correctly.'
+                exit 0
+              fi
             fi
             echo "Smoke test attempt ${attempt}/12 not ready yet; retrying in 5 seconds..."
             sleep 5
           done
+
           echo 'Live HIG smoke test did not pass in time.'
           exit 1
